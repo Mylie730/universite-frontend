@@ -1,0 +1,34 @@
+<app-navbar></app-navbar>
+
+<div class="compte-container">
+  <mat-card class="compte-card">
+    <h2>Mon compte</h2>
+    <p class="subtitle">Modifier votre mot de passe</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mot de passe actuel</mat-label>
+        <input matInput type="password" formControlName="currentPassword" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nouveau mot de passe</mat-label>
+        <input matInput type="password" formControlName="newPassword" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirmer le nouveau mot de passe</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" />
+      </mat-form-field>
+
+      <div class="messages">
+        <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+        <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+        {{ loading ? 'Mise à jour...' : 'Changer le mot de passe' }}
+      </button>
+    </form>
+  </mat-card>
+</div>

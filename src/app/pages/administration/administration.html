@@ -1,0 +1,75 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <h1>Module Administration</h1>
+  <p class="subtitle">Gestion documentaire, publication et consultation des bulletins.</p>
+
+  <mat-card class="card">
+    <mat-card-title>Documents administratifs</mat-card-title>
+    <mat-card-content>
+      <div class="item" *ngFor="let doc of documents">
+        <div>
+          <strong>{{ doc.type }}</strong>
+          <p>{{ doc.ref }} • {{ doc.date }}</p>
+        </div>
+        <button mat-stroked-button color="primary">Voir</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="card bulletin-card">
+    <mat-card-title>Publication de bulletin</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="publishForm" class="bulletin-form">
+        <mat-form-field appearance="outline">
+          <mat-label>ID Étudiant</mat-label>
+          <input matInput type="number" formControlName="etudiantId" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Semestre</mat-label>
+          <input matInput formControlName="semestre" placeholder="S1, S2..." />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Année académique</mat-label>
+          <input matInput formControlName="anneeAcademique" placeholder="2025-2026" />
+        </mat-form-field>
+      </form>
+      <button mat-raised-button color="primary" (click)="publierBulletin()" [disabled]="publishing">
+        <mat-icon>publish</mat-icon>
+        Publier bulletin
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="card bulletin-card">
+    <mat-card-title>Consultation bulletin publié</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="consultForm" class="bulletin-form">
+        <mat-form-field appearance="outline">
+          <mat-label>ID Étudiant</mat-label>
+          <input matInput type="number" formControlName="etudiantId" />
+        </mat-form-field>
+      </form>
+
+      <button mat-stroked-button color="primary" (click)="consulterBulletin()">
+        <mat-icon>search</mat-icon>
+        Consulter bulletin
+      </button>
+
+      <div class="loading" *ngIf="loadingBulletin">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+
+      <div class="bulletin-view" *ngIf="bulletin">
+        <h3>{{ bulletin.etudiantNomComplet }} (ID: {{ bulletin.etudiantId }})</h3>
+        <p><strong>Semestre:</strong> {{ bulletin.semestre }}</p>
+        <p><strong>Année académique:</strong> {{ bulletin.anneeAcademique }}</p>
+        <p><strong>Moyenne générale:</strong> {{ bulletin.moyenneGenerale }}</p>
+        <p><strong>Mention:</strong> {{ bulletin.mention }}</p>
+        <p><strong>Publié:</strong> {{ bulletin.publie ? 'Oui' : 'Non' }}</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,82 @@
+<app-navbar></app-navbar>
+
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <div class="dashboard-container">
+    <h1>Tableau de Bord UCHK</h1>
+
+    <div *ngIf="loading" class="loading">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>Chargement des données...</p>
+    </div>
+
+    <div *ngIf="!loading" class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon class="stat-icon">school</mat-icon>
+            <h3>Étudiants</h3>
+          </div>
+          <div class="stat-number">{{ stats.totalEtudiants }}</div>
+          <p class="stat-label">Total des étudiants</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon class="stat-icon">book</mat-icon>
+            <h3>Formations</h3>
+          </div>
+          <div class="stat-number">{{ stats.totalFormations }}</div>
+          <p class="stat-label">Programmes actifs</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon class="stat-icon">category</mat-icon>
+            <h3>Filières</h3>
+          </div>
+          <div class="stat-number">{{ stats.totalFilieres }}</div>
+          <p class="stat-label">Domaines d'études</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon class="stat-icon">verified</mat-icon>
+            <h3>Actifs</h3>
+          </div>
+          <div class="stat-number">{{ stats.etudiantsActifs }}</div>
+          <p class="stat-label">Étudiants actifs</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="module-grid">
+      <mat-card routerLink="/communication" class="module-card">
+        <mat-icon>campaign</mat-icon>
+        <h3>Communication</h3>
+      </mat-card>
+
+      <mat-card routerLink="/administration" class="module-card">
+        <mat-icon>folder</mat-icon>
+        <h3>Administration</h3>
+      </mat-card>
+
+      <mat-card routerLink="/insertion" class="module-card">
+        <mat-icon>trending_up</mat-icon>
+        <h3>Appui Insertion</h3>
+      </mat-card>
+
+      <mat-card routerLink="/formations" class="module-card">
+        <mat-icon>menu_book</mat-icon>
+        <h3>Formations</h3>
+      </mat-card>
+    </div>
+  </div>
+</div>

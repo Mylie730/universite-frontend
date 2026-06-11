@@ -1,0 +1,16 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="content">
+    <h1>Mes cours</h1>
+    <p class="subtitle">Consultez les cours associés à votre formation.</p>
+
+    <div class="cards">
+      <mat-card class="course-card" *ngFor="let c of cours">
+        <h3>{{ c.nom }}</h3>
+        <p><strong>Enseignant :</strong> {{ c.enseignant }}</p>
+        <p><strong>Horaire :</strong> {{ c.horaire }}</p>
+      </mat-card>
+    </div>
+  </main>
+</div>

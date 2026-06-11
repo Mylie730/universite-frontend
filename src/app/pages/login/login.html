@@ -1,0 +1,92 @@
+<div class="login-container">
+  <div class="login-overlay"></div>
+
+  <div class="login-shell">
+    <section class="brand-panel">
+      <div class="brand-badge">UCHK</div>
+      <h1>Université Cheikh Hamidou KANE</h1>
+      <p class="tagline">
+        Plateforme académique centralisée : notes, bulletins, cours, calendrier, suivi étudiant.
+      </p>
+
+      <ul class="feature-list">
+        <li><mat-icon>verified_user</mat-icon> Accès sécurisé par rôle utilisateur</li>
+        <li><mat-icon>school</mat-icon> Gestion pédagogique moderne</li>
+        <li><mat-icon>assessment</mat-icon> Suivi des résultats et bulletins</li>
+      </ul>
+    </section>
+
+    <mat-card class="login-card">
+      <div class="header">
+        <h2>Connexion à la plateforme</h2>
+        <p class="subtitle">Entrez vos identifiants universitaires</p>
+      </div>
+
+      <div *ngIf="errorMessage" class="error">
+        <mat-icon>error</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Adresse Email</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            placeholder="exemple@universite.com"
+          />
+          <mat-icon matSuffix>mail</mat-icon>
+          <mat-error *ngIf="emailCtrl?.hasError('required')">L'email est obligatoire</mat-error>
+          <mat-error *ngIf="emailCtrl?.hasError('email')">Format d'email invalide</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Mot de passe</mat-label>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="motDePasse"
+            placeholder="Entrez votre mot de passe"
+          />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Afficher ou masquer le mot de passe'"
+          >
+            <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="motDePasseCtrl?.hasError('required')"
+            >Le mot de passe est obligatoire</mat-error
+          >
+          <mat-error *ngIf="motDePasseCtrl?.hasError('minlength')">
+            Le mot de passe doit contenir au moins 6 caractères
+          </mat-error>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="login-button"
+          [disabled]="loginForm.invalid || isLoading"
+        >
+          <mat-progress-spinner
+            *ngIf="isLoading"
+            mode="indeterminate"
+            diameter="18"
+            class="btn-spinner"
+          ></mat-progress-spinner>
+          <mat-icon *ngIf="!isLoading">login</mat-icon>
+          {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
+        </button>
+      </form>
+
+      <div class="footer">
+        <p class="hint">En cas de difficulté, contactez l'administration pédagogique.</p>
+      </div>
+    </mat-card>
+  </div>
+</div>

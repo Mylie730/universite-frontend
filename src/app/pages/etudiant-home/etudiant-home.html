@@ -1,0 +1,20 @@
+<div class="dashboard-layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="dashboard-main">
+    <header class="page-header">
+      <h1>Espace Étudiant</h1>
+      <p>Bienvenue sur votre portail personnel UCHK</p>
+    </header>
+
+    <section class="cards-grid">
+      <a class="card-link" *ngFor="let card of cards" [routerLink]="card.route">
+        <mat-card class="module-card">
+          <mat-icon>{{ card.icon }}</mat-icon>
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+        </mat-card>
+      </a>
+    </section>
+  </main>
+</div>

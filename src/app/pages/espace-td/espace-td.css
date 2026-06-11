@@ -1,0 +1,18 @@
+.td-container {
+  padding: 24px;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.td-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.td-card {
+  padding: 12px;
+}

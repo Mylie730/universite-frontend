@@ -1,0 +1,26 @@
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: #f4f6fb;
+}
+
+.content {
+  padding: 2rem;
+}
+
+.subtitle {
+  color: #60708f;
+  margin-top: 0.25rem;
+}
+
+.cards {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.course-card {
+  border-radius: 12px;
+}

@@ -1,0 +1,136 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <h1>Gestion des Formations</h1>
+  <p class="subtitle">
+    L’administration gère ici les formations, leur niveau, durée et financement.
+  </p>
+
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        {{ editingId ? 'Modifier une formation' : 'Ajouter une nouvelle formation' }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="formationForm" class="formation-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Nom de la formation</mat-label>
+          <input matInput formControlName="nom" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <input matInput formControlName="type" placeholder="Certifiante, diplômante..." />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Niveau</mat-label>
+          <input matInput formControlName="niveau" placeholder="Licence, Master..." />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date début</mat-label>
+          <input matInput type="date" formControlName="dateDebut" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date fin</mat-label>
+          <input matInput type="date" formControlName="dateFin" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Montant financement</mat-label>
+          <input matInput type="number" formControlName="montantFinancement" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Type financement</mat-label>
+          <input matInput formControlName="typeFinancement" placeholder="Public, privé..." />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre formés hommes</mat-label>
+          <input matInput type="number" formControlName="nombreFormesHommes" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre formés femmes</mat-label>
+          <input matInput type="number" formControlName="nombreFormesFemmes" />
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="actions">
+      <button mat-raised-button color="primary" (click)="submitFormation()" [disabled]="saving">
+        <mat-icon>{{ editingId ? 'save' : 'add_circle' }}</mat-icon>
+        {{ editingId ? 'Mettre à jour' : 'Ajouter formation' }}
+      </button>
+      <button mat-stroked-button (click)="resetForm()" [disabled]="saving">
+        <mat-icon>refresh</mat-icon>
+        Réinitialiser
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <div *ngIf="loading" class="loading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Chargement des formations...</p>
+  </div>
+
+  <mat-card class="table-card" *ngIf="!loading">
+    <mat-card-header>
+      <mat-card-title>Liste des formations ({{ formations.length }})</mat-card-title>
+    </mat-card-header>
+
+    <div class="table-container">
+      <table mat-table [dataSource]="formations" class="formations-table">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let f">{{ f.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nom">
+          <th mat-header-cell *matHeaderCellDef>Nom</th>
+          <td mat-cell *matCellDef="let f">{{ f.nom }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let f">{{ f.type || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="niveau">
+          <th mat-header-cell *matHeaderCellDef>Niveau</th>
+          <td mat-cell *matCellDef="let f">{{ f.niveau }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateDebut">
+          <th mat-header-cell *matHeaderCellDef>Début</th>
+          <td mat-cell *matCellDef="let f">{{ f.dateDebut }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateFin">
+          <th mat-header-cell *matHeaderCellDef>Fin</th>
+          <td mat-cell *matCellDef="let f">{{ f.dateFin }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let f">
+            <button mat-icon-button color="primary" (click)="editFormation(f)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteFormation(f.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </mat-card>
+</div>

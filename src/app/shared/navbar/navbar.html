@@ -1,0 +1,55 @@
+<mat-toolbar color="primary" class="navbar">
+  <div class="brand-wrap">
+    <span class="logo-icon">🎓</span>
+    <div class="brand-text">
+      <span class="logo">Université Cheikh Hamidou KANE</span>
+      <small class="subtitle">Plateforme de gestion universitaire</small>
+    </div>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="quick-links">
+    <button mat-button routerLink="/dashboard" class="nav-button">
+      <mat-icon>dashboard</mat-icon>
+      Dashboard
+    </button>
+
+    <button mat-button routerLink="/etudiants" class="nav-button">
+      <mat-icon>people</mat-icon>
+      Étudiants
+    </button>
+
+    <button mat-button routerLink="/formations" class="nav-button">
+      <mat-icon>menu_book</mat-icon>
+      Formations
+    </button>
+
+    <button mat-button routerLink="/admin" class="nav-button" *ngIf="isAdmin">
+      <mat-icon>admin_panel_settings</mat-icon>
+      Administration
+    </button>
+  </div>
+
+  <div class="user-panel">
+    <div class="user-meta">
+      <span class="user-name">{{ userName }}</span>
+      <small class="user-role">{{ userRole || 'Utilisateur' }}</small>
+    </div>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu utilisateur">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </div>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/mon-compte">
+      <mat-icon>person</mat-icon>
+      Mon compte
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Déconnexion
+    </button>
+  </mat-menu>
+</mat-toolbar>

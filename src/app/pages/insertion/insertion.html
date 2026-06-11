@@ -1,0 +1,16 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <h1>Module Appui à l'Insertion</h1>
+  <p class="subtitle">Suivi des étudiants, stages et insertion professionnelle.</p>
+
+  <div class="stats-grid">
+    <mat-card class="stat-card" *ngFor="let stat of stats">
+      <mat-card-content>
+        <mat-icon>trending_up</mat-icon>
+        <h3>{{ stat.valeur }}</h3>
+        <p>{{ stat.label }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

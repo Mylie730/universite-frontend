@@ -1,0 +1,57 @@
+.page-container {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.form-card,
+.table-card {
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.formation-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.actions {
+  padding: 0 1rem 1rem 1rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.loading {
+  margin: 1rem 0;
+}
+
+.loading p {
+  margin: 0.5rem 0 0;
+  color: #6b7280;
+}
+
+.table-container {
+  overflow-x: auto;
+  padding: 0.5rem 1rem 1rem 1rem;
+}
+
+.formations-table {
+  width: 100%;
+  min-width: 820px;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600;
+}
+
+.mat-mdc-row:hover {
+  background: #fafafa;
+}

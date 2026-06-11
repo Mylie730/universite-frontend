@@ -1,0 +1,21 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <h1>Module Communication</h1>
+  <p class="subtitle">Comptes rendus, circulaires et diffusion d’informations.</p>
+
+  <div class="cards">
+    <mat-card class="card">
+      <mat-card-title>Comptes rendus récents</mat-card-title>
+      <mat-card-content>
+        <div class="item" *ngFor="let item of comptesRendus">
+          <div>
+            <strong>{{ item.titre }}</strong>
+            <p>{{ item.type }} • {{ item.date }} • {{ item.auteur }}</p>
+          </div>
+          <button mat-stroked-button color="primary">Consulter</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

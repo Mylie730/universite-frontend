@@ -1,0 +1,16 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="content">
+    <h1>Mes notes</h1>
+    <p class="subtitle">Suivi de vos résultats académiques.</p>
+
+    <div class="cards">
+      <mat-card class="note-card" *ngFor="let n of notes">
+        <h3>{{ n.matiere }}</h3>
+        <p><strong>Note :</strong> {{ n.note }}/20</p>
+        <p><strong>Coefficient :</strong> {{ n.coefficient }}</p>
+      </mat-card>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,20 @@
+<app-navbar></app-navbar>
+
+<div class="td-container">
+  <h2>Espace TD</h2>
+  <p class="subtitle">Consignes, suivi et dépôt de vos travaux dirigés.</p>
+
+  <div class="td-grid">
+    <mat-card class="td-card" *ngFor="let td of tds">
+      <h3>{{ td.titre }}</h3>
+      <p><strong>Cours :</strong> {{ td.cours }}</p>
+      <p><strong>Date limite :</strong> {{ td.dateLimite }}</p>
+      <p><strong>Statut :</strong> {{ td.statut }}</p>
+
+      <button mat-stroked-button color="primary">
+        <mat-icon>upload_file</mat-icon>
+        Déposer mon travail
+      </button>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<app-navbar></app-navbar>
+
+<div class="home-container">
+  <h1>Accueil Tuteur</h1>
+  <p class="subtitle">Gérez le suivi tutorat et l’accompagnement des apprenants.</p>
+
+  <div class="cards-grid">
+    <mat-card class="action-card" *ngFor="let action of actions" [routerLink]="action.route">
+      <mat-icon>{{ action.icon }}</mat-icon>
+      <h3>{{ action.titre }}</h3>
+    </mat-card>
+  </div>
+</div>

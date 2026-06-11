@@ -1,0 +1,38 @@
+<app-navbar></app-navbar>
+
+<div class="bulletins-container">
+  <mat-card>
+    <h2>Mes bulletins</h2>
+    <p class="subtitle">Résultats par cours et semestre</p>
+
+    <table mat-table [dataSource]="bulletins" class="mat-elevation-z2 full-width-table">
+      <ng-container matColumnDef="cours">
+        <th mat-header-cell *matHeaderCellDef>Cours</th>
+        <td mat-cell *matCellDef="let element">{{ element.cours }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef>Note</th>
+        <td mat-cell *matCellDef="let element">{{ element.note }}/20</td>
+      </ng-container>
+
+      <ng-container matColumnDef="moyenne">
+        <th mat-header-cell *matHeaderCellDef>Moyenne</th>
+        <td mat-cell *matCellDef="let element">{{ element.moyenne }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="mention">
+        <th mat-header-cell *matHeaderCellDef>Mention</th>
+        <td mat-cell *matCellDef="let element">{{ element.mention }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="semestre">
+        <th mat-header-cell *matHeaderCellDef>Semestre</th>
+        <td mat-cell *matCellDef="let element">{{ element.semestre }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card>
+</div>
