@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -25,12 +25,18 @@ import { AuthService } from '../../core/services/auth';
   templateUrl: './mon-compte.html',
   styleUrl: './mon-compte.css',
 })
-export class MonCompte {
+export class MonCompte implements OnInit {
   loading = false;
   successMessage = '';
   errorMessage = '';
 
   form;
+
+  profile = {
+    nomComplet: 'Non disponible',
+    email: 'Non disponible',
+    role: 'Non disponible',
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -41,6 +47,18 @@ export class MonCompte {
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
     });
+  }
+
+  ngOnInit(): void {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return;
+    }
+
+    this.profile = {
+      nomComplet: localStorage.getItem('userName') || 'Non disponible',
+      email: localStorage.getItem('userEmail') || 'Non disponible',
+      role: localStorage.getItem('userRole') || 'Non disponible',
+    };
   }
 
   onSubmit(): void {

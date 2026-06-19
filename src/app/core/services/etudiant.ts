@@ -30,7 +30,9 @@ export class EtudiantService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  searchEtudiants(query: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/search?query=${query}`);
+  searchEtudiants(nom: string, page: number = 0, size: number = 5): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}/search?nom=${encodeURIComponent(nom)}&page=${page}&size=${size}`,
+    );
   }
 }

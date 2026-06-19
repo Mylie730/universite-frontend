@@ -18,6 +18,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { Navbar } from '../../shared/navbar/navbar';
 import { EtudiantService } from '../../core/services/etudiant';
+import { FormationService } from '../../core/services/formation';
 
 @Component({
   selector: 'app-etudiants',
@@ -44,9 +45,10 @@ export class Etudiants implements OnInit {
   etudiants: any[] = [];
   displayedColumns: string[] = [
     'id',
-    'numeroMatricule',
+    'ine',
     'nom',
     'prenom',
+    'genre',
     'formation',
     'promo',
     'anneeDebut',
@@ -60,28 +62,31 @@ export class Etudiants implements OnInit {
   editingId: number | null = null;
 
   etudiantForm: FormGroup;
+  formations: any[] = [];
 
   constructor(
     private etudiantService: EtudiantService,
+    private formationService: FormationService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
   ) {
     this.etudiantForm = this.fb.group({
-      numeroMatricule: ['', Validators.required],
+      ine: ['', Validators.required],
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
       dateNaissance: ['', Validators.required],
-      formation: ['', Validators.required],
+      genre: ['', Validators.required],
+      formationId: [null, Validators.required],
       promo: ['', Validators.required],
       anneeDebut: ['', Validators.required],
-      anneeSortie: [''],
+      anneeSortie: ['', Validators.required],
       diplomes: [''],
       autresFormations: [''],
     });
   }
 
   ngOnInit(): void {
+    this.loadFormations();
     this.loadEtudiants();
   }
 
@@ -108,7 +113,7 @@ export class Etudiants implements OnInit {
     this.loading = true;
     this.etudiantService.searchEtudiants(this.searchQuery.trim()).subscribe({
       next: (data) => {
-        this.etudiants = data ?? [];
+        this.etudiants = data?.content ?? [];
         this.loading = false;
       },
       error: () => {
@@ -125,7 +130,20 @@ export class Etudiants implements OnInit {
     }
 
     this.saving = true;
-    const payload = this.etudiantForm.value;
+    const formValue = this.etudiantForm.value;
+    const payload = {
+      ine: formValue.ine,
+      nom: formValue.nom,
+      prenom: formValue.prenom,
+      dateNaissance: formValue.dateNaissance,
+      genre: formValue.genre,
+      promo: formValue.promo,
+      anneeDebut: formValue.anneeDebut,
+      anneeSortie: formValue.anneeSortie,
+      diplomes: formValue.diplomes,
+      autresFormations: formValue.autresFormations,
+      formation: formValue.formationId ? { id: Number(formValue.formationId) } : null,
+    };
 
     const request$ = this.editingId
       ? this.etudiantService.updateEtudiant(this.editingId, payload)
@@ -141,9 +159,23 @@ export class Etudiants implements OnInit {
         this.resetForm();
         this.loadEtudiants();
       },
-      error: () => {
+      error: (error) => {
         this.saving = false;
-        this.notify('Échec enregistrement étudiant', 'warn');
+
+        if (error?.status === 403) {
+          this.notify(
+            "Inscription refusée: vous n'avez pas les droits (profil requis: ADMIN, PROFESSEUR ou RESPONSABLE_FORMATION)",
+            'warn',
+          );
+          return;
+        }
+
+        const backendMessage = error?.error?.message;
+        const validationErrors = error?.error?.errors
+          ? Object.values(error.error.errors).join(' | ')
+          : null;
+
+        this.notify(backendMessage || validationErrors || 'Échec enregistrement étudiant', 'warn');
       },
     });
   }
@@ -151,12 +183,12 @@ export class Etudiants implements OnInit {
   editEtudiant(etudiant: any): void {
     this.editingId = etudiant.id;
     this.etudiantForm.patchValue({
-      numeroMatricule: etudiant.numeroMatricule ?? '',
+      ine: etudiant.ine ?? '',
       nom: etudiant.nom ?? '',
       prenom: etudiant.prenom ?? '',
-      email: etudiant.email ?? '',
       dateNaissance: etudiant.dateNaissance ?? '',
-      formation: etudiant.formation ?? '',
+      genre: etudiant.genre ?? '',
+      formationId: etudiant.formation?.id ?? null,
       promo: etudiant.promo ?? '',
       anneeDebut: etudiant.anneeDebut ?? '',
       anneeSortie: etudiant.anneeSortie ?? '',
@@ -182,6 +214,17 @@ export class Etudiants implements OnInit {
       },
       error: () => {
         this.notify('Suppression impossible', 'warn');
+      },
+    });
+  }
+
+  loadFormations(): void {
+    this.formationService.getAll().subscribe({
+      next: (data) => {
+        this.formations = data ?? [];
+      },
+      error: () => {
+        this.formations = [];
       },
     });
   }

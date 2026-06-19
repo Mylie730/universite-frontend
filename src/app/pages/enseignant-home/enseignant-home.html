@@ -10,4 +10,18 @@
       <h3>{{ action.titre }}</h3>
     </mat-card>
   </div>
+
+  <div class="cards-grid" style="margin-top: 16px">
+    <mat-card class="action-card" *ngFor="let formation of formations">
+      <h3>{{ formation.nom }}</h3>
+      <p><strong>Niveau :</strong> {{ formation.niveau }}</p>
+
+      <p *ngIf="!formation.matieres || formation.matieres.length === 0">Aucune matière.</p>
+      <ul *ngIf="formation.matieres && formation.matieres.length > 0">
+        <li *ngFor="let matiere of formation.matieres">
+          {{ matiere.nom }}<span *ngIf="matiere.code"> ({{ matiere.code }})</span>
+        </li>
+      </ul>
+    </mat-card>
+  </div>
 </div>

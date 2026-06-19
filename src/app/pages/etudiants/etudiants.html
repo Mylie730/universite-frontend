@@ -17,8 +17,8 @@
     <mat-card-content>
       <form [formGroup]="etudiantForm" class="etudiant-form">
         <mat-form-field appearance="outline">
-          <mat-label>INE / N° Matricule</mat-label>
-          <input matInput formControlName="numeroMatricule" />
+          <mat-label>INE</mat-label>
+          <input matInput formControlName="ine" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -32,18 +32,27 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
           <mat-label>Date de naissance</mat-label>
           <input matInput type="date" formControlName="dateNaissance" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
+          <mat-label>Genre</mat-label>
+          <mat-select formControlName="genre">
+            <mat-option value="H">Homme</mat-option>
+            <mat-option value="F">Femme</mat-option>
+            <mat-option value="AUTRE">Autre</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
           <mat-label>Formation</mat-label>
-          <input matInput formControlName="formation" />
+          <mat-select formControlName="formationId">
+            <mat-option [value]="null">-- Sélectionner --</mat-option>
+            <mat-option *ngFor="let formation of formations" [value]="formation.id">
+              {{ formation.nom }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -53,12 +62,12 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Année de début</mat-label>
-          <input matInput formControlName="anneeDebut" />
+          <input matInput type="number" formControlName="anneeDebut" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Année de sortie</mat-label>
-          <input matInput formControlName="anneeSortie" />
+          <input matInput type="number" formControlName="anneeSortie" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -95,7 +104,7 @@
             matInput
             [(ngModel)]="searchQuery"
             (keyup.enter)="search()"
-            placeholder="INE, nom, prénom ou email"
+            placeholder="INE, nom ou prénom"
           />
         </mat-form-field>
 
@@ -129,9 +138,9 @@
           <td mat-cell *matCellDef="let element">{{ element.id }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="numeroMatricule">
+        <ng-container matColumnDef="ine">
           <th mat-header-cell *matHeaderCellDef>INE</th>
-          <td mat-cell *matCellDef="let element">{{ element.numeroMatricule }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.ine }}</td>
         </ng-container>
 
         <ng-container matColumnDef="nom">
@@ -144,9 +153,14 @@
           <td mat-cell *matCellDef="let element">{{ element.prenom }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="genre">
+          <th mat-header-cell *matHeaderCellDef>Genre</th>
+          <td mat-cell *matCellDef="let element">{{ element.genre }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="formation">
           <th mat-header-cell *matHeaderCellDef>Formation</th>
-          <td mat-cell *matCellDef="let element">{{ element.formation }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.formation?.nom || '-' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="promo">

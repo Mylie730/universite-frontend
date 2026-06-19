@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { DashboardStats } from '../../models/dashboard-stats';
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +11,8 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-  getDashboardStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/stats`);
+  getDashboardStats(): Observable<DashboardStats> {
+    return this.http.get<DashboardStats>(`${this.apiUrl}/statistiques`);
   }
 
   getTotalEtudiants(): Observable<any> {

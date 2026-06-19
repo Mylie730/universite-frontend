@@ -1,4 +1,5 @@
-import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { Routes, Router } from '@angular/router';
 
 import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
@@ -16,11 +17,28 @@ import { Bulletins } from './pages/bulletins/bulletins';
 import { EspaceTd } from './pages/espace-td/espace-td';
 
 import { authGuard } from './core/guards/auth-guard';
+import { AuthService } from './core/services/auth';
+
+const rootRedirectGuard = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (!authService.isLoggedIn()) {
+    return router.parseUrl('/login');
+  }
+
+  if (authService.isEtudiant()) {
+    return router.parseUrl('/etudiant-home');
+  }
+
+  return router.parseUrl('/dashboard');
+};
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    canActivate: [rootRedirectGuard],
+    component: Login,
     pathMatch: 'full',
   },
 

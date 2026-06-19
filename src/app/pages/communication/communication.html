@@ -4,18 +4,112 @@
   <h1>Module Communication</h1>
   <p class="subtitle">Comptes rendus, circulaires et diffusion d’informations.</p>
 
-  <div class="cards">
-    <mat-card class="card">
-      <mat-card-title>Comptes rendus récents</mat-card-title>
-      <mat-card-content>
-        <div class="item" *ngFor="let item of comptesRendus">
-          <div>
-            <strong>{{ item.titre }}</strong>
-            <p>{{ item.type }} • {{ item.date }} • {{ item.auteur }}</p>
-          </div>
-          <button mat-stroked-button color="primary">Consulter</button>
-        </div>
-      </mat-card-content>
-    </mat-card>
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        {{ editingId ? 'Modifier une communication' : 'Ajouter une communication' }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="communicationForm" class="communication-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Titre</mat-label>
+          <input matInput formControlName="titre" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <input matInput formControlName="type" placeholder="Réunion, Webinaire, Circulaire..." />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input matInput type="date" formControlName="date" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Auteur</mat-label>
+          <input matInput formControlName="auteur" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contenu</mat-label>
+          <textarea matInput rows="4" formControlName="contenu"></textarea>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="actions">
+      <button mat-raised-button color="primary" (click)="submitCommunication()" [disabled]="saving">
+        <mat-icon>{{ editingId ? 'save' : 'add_circle' }}</mat-icon>
+        {{ editingId ? 'Mettre à jour' : 'Ajouter communication' }}
+      </button>
+
+      <button mat-stroked-button (click)="resetForm()" [disabled]="saving">
+        <mat-icon>refresh</mat-icon>
+        Réinitialiser
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <div *ngIf="loading" class="loading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Chargement des communications...</p>
   </div>
+
+  <mat-card class="table-card" *ngIf="!loading">
+    <mat-card-header>
+      <mat-card-title>Liste des communications ({{ communications.length }})</mat-card-title>
+    </mat-card-header>
+
+    <div class="table-container">
+      <table mat-table [dataSource]="communications" class="communications-table">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let c">{{ c.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="titre">
+          <th mat-header-cell *matHeaderCellDef>Titre</th>
+          <td mat-cell *matCellDef="let c">{{ c.titre }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let c">{{ c.type }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let c">{{ c.date }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="auteur">
+          <th mat-header-cell *matHeaderCellDef>Auteur</th>
+          <td mat-cell *matCellDef="let c">{{ c.auteur }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let c">
+            <button mat-icon-button color="primary" (click)="editCommunication(c)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteCommunication(c.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <div *ngIf="communications.length === 0" class="empty-state">
+      <mat-icon>forum</mat-icon>
+      <p>Aucune communication trouvée</p>
+    </div>
+  </mat-card>
 </div>

@@ -2,73 +2,188 @@
 
 <div class="page-container">
   <h1>Module Administration</h1>
-  <p class="subtitle">Gestion documentaire, publication et consultation des bulletins.</p>
+  <p class="subtitle">Gestion des documents, budgets, personnels, partenaires et stages.</p>
 
   <mat-card class="card">
     <mat-card-title>Documents administratifs</mat-card-title>
     <mat-card-content>
-      <div class="item" *ngFor="let doc of documents">
-        <div>
-          <strong>{{ doc.type }}</strong>
-          <p>{{ doc.ref }} • {{ doc.date }}</p>
-        </div>
-        <button mat-stroked-button color="primary">Voir</button>
+      <div class="form-grid">
+        <input type="text" placeholder="Titre *" [(ngModel)]="newDocument.titre" />
+        <input type="text" placeholder="Type *" [(ngModel)]="newDocument.type" />
+        <input type="date" placeholder="Date *" [(ngModel)]="newDocument.dateDocument" />
+        <input type="text" placeholder="Description" [(ngModel)]="newDocument.description" />
+        <input type="text" placeholder="URL fichier" [(ngModel)]="newDocument.fichierUrl" />
+        <button mat-raised-button color="primary" (click)="createDocument()">
+          Ajouter document
+        </button>
       </div>
-    </mat-card-content>
-  </mat-card>
 
-  <mat-card class="card bulletin-card">
-    <mat-card-title>Publication de bulletin</mat-card-title>
-    <mat-card-content>
-      <form [formGroup]="publishForm" class="bulletin-form">
-        <mat-form-field appearance="outline">
-          <mat-label>ID Étudiant</mat-label>
-          <input matInput type="number" formControlName="etudiantId" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Semestre</mat-label>
-          <input matInput formControlName="semestre" placeholder="S1, S2..." />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Année académique</mat-label>
-          <input matInput formControlName="anneeAcademique" placeholder="2025-2026" />
-        </mat-form-field>
-      </form>
-      <button mat-raised-button color="primary" (click)="publierBulletin()" [disabled]="publishing">
-        <mat-icon>publish</mat-icon>
-        Publier bulletin
-      </button>
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card class="card bulletin-card">
-    <mat-card-title>Consultation bulletin publié</mat-card-title>
-    <mat-card-content>
-      <form [formGroup]="consultForm" class="bulletin-form">
-        <mat-form-field appearance="outline">
-          <mat-label>ID Étudiant</mat-label>
-          <input matInput type="number" formControlName="etudiantId" />
-        </mat-form-field>
-      </form>
-
-      <button mat-stroked-button color="primary" (click)="consulterBulletin()">
-        <mat-icon>search</mat-icon>
-        Consulter bulletin
-      </button>
-
-      <div class="loading" *ngIf="loadingBulletin">
+      <div class="loading" *ngIf="loadingDocuments">
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       </div>
 
-      <div class="bulletin-view" *ngIf="bulletin">
-        <h3>{{ bulletin.etudiantNomComplet }} (ID: {{ bulletin.etudiantId }})</h3>
-        <p><strong>Semestre:</strong> {{ bulletin.semestre }}</p>
-        <p><strong>Année académique:</strong> {{ bulletin.anneeAcademique }}</p>
-        <p><strong>Moyenne générale:</strong> {{ bulletin.moyenneGenerale }}</p>
-        <p><strong>Mention:</strong> {{ bulletin.mention }}</p>
-        <p><strong>Publié:</strong> {{ bulletin.publie ? 'Oui' : 'Non' }}</p>
+      <div *ngIf="!loadingDocuments && documents.length === 0">
+        Aucun document administratif disponible.
+      </div>
+
+      <div class="item" *ngFor="let doc of documents">
+        <div>
+          <strong>{{ doc.titre }}</strong>
+          <p>{{ doc.type }} • {{ doc.dateDocument }}</p>
+          <p *ngIf="doc.description">{{ doc.description }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="card">
+    <mat-card-title>Budgets</mat-card-title>
+    <mat-card-content>
+      <div class="form-grid">
+        <input
+          type="number"
+          placeholder="Année budgétaire *"
+          [(ngModel)]="newBudget.anneeBudgetaire"
+        />
+        <input type="text" placeholder="Projet budget" [(ngModel)]="newBudget.projetBudget" />
+        <input
+          type="text"
+          placeholder="Note d'orientation"
+          [(ngModel)]="newBudget.noteOrientation"
+        />
+        <input type="number" placeholder="Budget prévu" [(ngModel)]="newBudget.budgetPrevu" />
+        <input type="number" placeholder="Budget réalisé" [(ngModel)]="newBudget.budgetRealise" />
+        <button mat-raised-button color="primary" (click)="createBudget()">Ajouter budget</button>
+      </div>
+
+      <div class="loading" *ngIf="loadingBudgets">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+
+      <div *ngIf="!loadingBudgets && budgets.length === 0">Aucun budget disponible.</div>
+
+      <div class="item" *ngFor="let budget of budgets">
+        <div>
+          <strong>{{ budget.anneeBudgetaire }}</strong>
+          <p *ngIf="budget.projetBudget">{{ budget.projetBudget }}</p>
+          <p>Prévu: {{ budget.budgetPrevu ?? 0 }} • Réalisé: {{ budget.budgetRealise ?? 0 }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="card">
+    <mat-card-title>Personnels</mat-card-title>
+    <mat-card-content>
+      <div class="form-grid">
+        <input type="text" placeholder="Nom *" [(ngModel)]="newPersonnel.nom" />
+        <input type="text" placeholder="Prénom *" [(ngModel)]="newPersonnel.prenom" />
+        <input type="text" placeholder="Fonction *" [(ngModel)]="newPersonnel.fonction" />
+        <input type="text" placeholder="Département" [(ngModel)]="newPersonnel.departement" />
+        <input type="email" placeholder="Email" [(ngModel)]="newPersonnel.email" />
+        <input type="text" placeholder="Téléphone" [(ngModel)]="newPersonnel.telephone" />
+        <button mat-raised-button color="primary" (click)="createPersonnel()">
+          Ajouter personnel
+        </button>
+      </div>
+
+      <div class="loading" *ngIf="loadingPersonnels">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+
+      <div *ngIf="!loadingPersonnels && personnels.length === 0">Aucun personnel disponible.</div>
+
+      <div class="item" *ngFor="let p of personnels">
+        <div>
+          <strong>{{ p.nom }} {{ p.prenom }}</strong>
+          <p>
+            {{ p.fonction }}<span *ngIf="p.departement"> • {{ p.departement }}</span>
+          </p>
+          <p *ngIf="p.email || p.telephone">
+            <span *ngIf="p.email">{{ p.email }}</span>
+            <span *ngIf="p.email && p.telephone"> • </span>
+            <span *ngIf="p.telephone">{{ p.telephone }}</span>
+          </p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="card">
+    <mat-card-title>Partenaires</mat-card-title>
+    <mat-card-content>
+      <div class="form-grid">
+        <input type="text" placeholder="Nom partenaire *" [(ngModel)]="newPartenaire.nom" />
+        <input
+          type="text"
+          placeholder="Type partenaire"
+          [(ngModel)]="newPartenaire.typePartenaire"
+        />
+        <input type="text" placeholder="Nom contact" [(ngModel)]="newPartenaire.contactNom" />
+        <input type="email" placeholder="Email contact" [(ngModel)]="newPartenaire.contactEmail" />
+        <input
+          type="text"
+          placeholder="Téléphone contact"
+          [(ngModel)]="newPartenaire.contactTelephone"
+        />
+        <input type="text" placeholder="Description" [(ngModel)]="newPartenaire.description" />
+        <button mat-raised-button color="primary" (click)="createPartenaire()">
+          Ajouter partenaire
+        </button>
+      </div>
+
+      <div class="loading" *ngIf="loadingPartenaires">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+
+      <div *ngIf="!loadingPartenaires && partenaires.length === 0">
+        Aucun partenaire disponible.
+      </div>
+
+      <div class="item" *ngFor="let partenaire of partenaires">
+        <div>
+          <strong>{{ partenaire.nom }}</strong>
+          <p *ngIf="partenaire.typePartenaire">{{ partenaire.typePartenaire }}</p>
+          <p *ngIf="partenaire.contactNom">{{ partenaire.contactNom }}</p>
+          <p *ngIf="partenaire.contactEmail || partenaire.contactTelephone">
+            <span *ngIf="partenaire.contactEmail">{{ partenaire.contactEmail }}</span>
+            <span *ngIf="partenaire.contactEmail && partenaire.contactTelephone"> • </span>
+            <span *ngIf="partenaire.contactTelephone">{{ partenaire.contactTelephone }}</span>
+          </p>
+          <p *ngIf="partenaire.description">{{ partenaire.description }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="card">
+    <mat-card-title>Stages</mat-card-title>
+    <mat-card-content>
+      <div class="form-grid">
+        <input type="text" placeholder="Entreprise *" [(ngModel)]="newStage.entreprise" />
+        <input type="date" placeholder="Date début" [(ngModel)]="newStage.dateDebut" />
+        <input type="date" placeholder="Date fin" [(ngModel)]="newStage.dateFin" />
+        <input type="text" placeholder="Statut insertion" [(ngModel)]="newStage.statutInsertion" />
+        <input type="text" placeholder="Évaluation" [(ngModel)]="newStage.evaluation" />
+        <input type="text" placeholder="URL rapport" [(ngModel)]="newStage.rapportStageUrl" />
+        <button mat-raised-button color="primary" (click)="createStage()">Ajouter stage</button>
+      </div>
+
+      <div class="loading" *ngIf="loadingStages">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+
+      <div *ngIf="!loadingStages && stages.length === 0">Aucun stage disponible.</div>
+
+      <div class="item" *ngFor="let stage of stages">
+        <div>
+          <strong>{{ stage.entreprise }}</strong>
+          <p *ngIf="stage.dateDebut || stage.dateFin">
+            {{ stage.dateDebut || '-' }} • {{ stage.dateFin || '-' }}
+          </p>
+          <p *ngIf="stage.statutInsertion">{{ stage.statutInsertion }}</p>
+          <p *ngIf="stage.evaluation">{{ stage.evaluation }}</p>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>

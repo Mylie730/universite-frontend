@@ -3,23 +3,27 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface CoursRequest {
+  code: string;
   nom: string;
-  description?: string;
-  formationId?: number;
-  enseignantNom?: string;
-  datePublication?: string;
-  lienDocument?: string;
+  semestre: string;
+  coefficient: number;
+  formationId: number;
+  lienPdfCours?: string;
+  lienPdfTd?: string;
+  lienMeet?: string;
 }
 
 export interface CoursResponse {
   id: number;
+  code: string;
   nom: string;
-  description?: string;
-  formationId?: number;
+  semestre: string;
+  coefficient: number;
+  formationId: number;
   formationNom?: string;
-  enseignantNom?: string;
-  datePublication?: string;
-  lienDocument?: string;
+  lienPdfCours?: string;
+  lienPdfTd?: string;
+  lienMeet?: string;
 }
 
 @Injectable({

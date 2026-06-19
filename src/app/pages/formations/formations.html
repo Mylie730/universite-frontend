@@ -14,6 +14,32 @@
     </mat-card-header>
 
     <mat-card-content>
+      <div class="inline-filiere-add">
+        <mat-form-field appearance="outline">
+          <mat-label>Nouvelle filière</mat-label>
+          <input matInput [(ngModel)]="newFiliere.nom" [ngModelOptions]="{ standalone: true }" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Description filière</mat-label>
+          <input
+            matInput
+            [(ngModel)]="newFiliere.description"
+            [ngModelOptions]="{ standalone: true }"
+          />
+        </mat-form-field>
+
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="addFiliere()"
+          [disabled]="addingFiliere"
+        >
+          <mat-icon>add</mat-icon>
+          Ajouter filière
+        </button>
+      </div>
+
       <form [formGroup]="formationForm" class="formation-form">
         <mat-form-field appearance="outline">
           <mat-label>Nom de la formation</mat-label>
@@ -28,6 +54,16 @@
         <mat-form-field appearance="outline">
           <mat-label>Niveau</mat-label>
           <input matInput formControlName="niveau" placeholder="Licence, Master..." />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Filière</mat-label>
+          <mat-select formControlName="filiereId">
+            <mat-option [value]="null">Aucune</mat-option>
+            <mat-option *ngFor="let filiere of filieres" [value]="filiere.id">
+              {{ filiere.nom }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -101,6 +137,11 @@
           <td mat-cell *matCellDef="let f">{{ f.type || '-' }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="filiere">
+          <th mat-header-cell *matHeaderCellDef>Filière</th>
+          <td mat-cell *matCellDef="let f">{{ f.filiere?.nom || '-' }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="niveau">
           <th mat-header-cell *matHeaderCellDef>Niveau</th>
           <td mat-cell *matCellDef="let f">{{ f.niveau }}</td>
@@ -116,11 +157,34 @@
           <td mat-cell *matCellDef="let f">{{ f.dateFin }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="montantFinancement">
+          <th mat-header-cell *matHeaderCellDef>Montant</th>
+          <td mat-cell *matCellDef="let f">{{ f.montantFinancement ?? '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="typeFinancement">
+          <th mat-header-cell *matHeaderCellDef>Type financement</th>
+          <td mat-cell *matCellDef="let f">{{ f.typeFinancement || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombreFormesHommes">
+          <th mat-header-cell *matHeaderCellDef>Hommes</th>
+          <td mat-cell *matCellDef="let f">{{ f.nombreFormesHommes ?? '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombreFormesFemmes">
+          <th mat-header-cell *matHeaderCellDef>Femmes</th>
+          <td mat-cell *matCellDef="let f">{{ f.nombreFormesFemmes ?? '-' }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let f">
             <button mat-icon-button color="primary" (click)="editFormation(f)">
               <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" (click)="selectFormationForMatiere(f.id)">
+              <mat-icon>library_add</mat-icon>
             </button>
             <button mat-icon-button color="warn" (click)="deleteFormation(f.id)">
               <mat-icon>delete</mat-icon>
@@ -132,5 +196,112 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </div>
+  </mat-card>
+
+  <mat-card class="form-card" *ngIf="selectedFormationIdForMatiere">
+    <mat-card-header>
+      <mat-card-title
+        >Ajouter une matière à la formation #{{ selectedFormationIdForMatiere }}</mat-card-title
+      >
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="formation-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Nom de la matière</mat-label>
+          <input matInput [(ngModel)]="newMatiere.nom" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Code</mat-label>
+          <input matInput [(ngModel)]="newMatiere.code" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <input matInput [(ngModel)]="newMatiere.description" />
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions class="actions">
+      <button mat-raised-button color="primary" (click)="addMatiere()" [disabled]="addingMatiere">
+        <mat-icon>add</mat-icon>
+        Ajouter matière
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="table-card" *ngIf="!loading">
+    <mat-card-header>
+      <mat-card-title>Formations et matières</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="formation-resource-card" *ngFor="let formation of formations">
+        <div class="formation-resource-header">
+          <h3>{{ formation.nom }}</h3>
+          <div class="badges-row">
+            <span class="filiere-badge">{{ formation.filiere?.nom || 'Sans filière' }}</span>
+            <span class="niveau-badge">{{ formation.niveau }}</span>
+          </div>
+        </div>
+
+        <p class="empty-text" *ngIf="!formation.matieres || formation.matieres.length === 0">
+          Aucune matière.
+        </p>
+
+        <div class="matiere-grid" *ngIf="formation.matieres && formation.matieres.length > 0">
+          <div class="matiere-item" *ngFor="let matiere of formation.matieres">
+            <div class="matiere-top">
+              <div>
+                <h4>{{ matiere.nom }}</h4>
+                <p class="matiere-meta">
+                  <span *ngIf="matiere.code">{{ matiere.code }}</span>
+                  <span *ngIf="matiere.description">• {{ matiere.description }}</span>
+                </p>
+              </div>
+              <button mat-icon-button color="warn" (click)="deleteMatiere(matiere.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+
+            <div class="upload-row">
+              <label class="upload-control">
+                <span>PDF cours</span>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  (change)="uploadMatierePdf($event, matiere.id, 'cours')"
+                  [disabled]="uploadingMatiereId === matiere.id && uploadingType === 'cours'"
+                />
+              </label>
+
+              <label class="upload-control">
+                <span>PDF TD</span>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  (change)="uploadMatierePdf($event, matiere.id, 'td')"
+                  [disabled]="uploadingMatiereId === matiere.id && uploadingType === 'td'"
+                />
+              </label>
+            </div>
+
+            <div class="links-row">
+              <a *ngIf="matiere.lienPdfCours" [href]="matiere.lienPdfCours" target="_blank">
+                Voir PDF cours
+              </a>
+              <span *ngIf="!matiere.lienPdfCours">Aucun PDF cours</span>
+
+              <a *ngIf="matiere.lienPdfTd" [href]="matiere.lienPdfTd" target="_blank">
+                Voir PDF TD
+              </a>
+              <span *ngIf="!matiere.lienPdfTd">Aucun PDF TD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
   </mat-card>
 </div>

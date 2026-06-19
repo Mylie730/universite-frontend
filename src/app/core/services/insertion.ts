@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface InsertionStatResponse {
-  label: string;
-  valeur: number;
+export interface InsertionStatsResponse {
+  autoEmploi: number;
+  emploiSalarie: number;
 }
 
 export interface PartenaireRequest {
@@ -24,13 +24,13 @@ export interface PartenaireResponse {
   providedIn: 'root',
 })
 export class InsertionService {
-  private statsUrl = 'http://localhost:8080/api/insertion/stats';
+  private statsUrl = 'http://localhost:8080/api/insertion/statistiques';
   private partenairesUrl = 'http://localhost:8080/api/insertion/partenaires';
 
   constructor(private http: HttpClient) {}
 
-  getStats(): Observable<InsertionStatResponse[]> {
-    return this.http.get<InsertionStatResponse[]>(this.statsUrl);
+  getStats(): Observable<InsertionStatsResponse> {
+    return this.http.get<InsertionStatsResponse>(this.statsUrl);
   }
 
   getPartenaires(): Observable<PartenaireResponse[]> {

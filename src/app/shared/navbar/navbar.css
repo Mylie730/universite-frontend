@@ -16,9 +16,11 @@
   min-width: 260px;
 }
 
-.logo-icon {
-  font-size: 1.5rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.22));
+.uchk-logo {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.28));
 }
 
 .brand-text {
