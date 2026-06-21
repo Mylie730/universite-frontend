@@ -17,5 +17,10 @@ export class AdministrationHome {
     { titre: 'Gestion documentaire', icon: 'folder', route: '/administration' },
     { titre: 'Communication interne', icon: 'campaign', route: '/communication' },
     { titre: 'Suivi insertion', icon: 'trending_up', route: '/insertion' },
+    {
+      titre: 'Gestion emplois du temps',
+      icon: 'edit_calendar',
+      route: '/gestion-emplois-du-temps',
+    },
   ];
 }

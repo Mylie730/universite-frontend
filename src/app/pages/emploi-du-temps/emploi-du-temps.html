@@ -1,0 +1,50 @@
+<app-navbar></app-navbar>
+
+<div class="dashboard-layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="dashboard-main">
+    <header class="page-header">
+      <h1>Emploi du temps</h1>
+      <p>Visualisation des créneaux définis par l’administration.</p>
+    </header>
+
+    <mat-card class="calendar-card">
+      <div class="calendar-wrapper">
+        <table class="calendar-table">
+          <thead>
+            <tr>
+              <th class="heure-col">Heure</th>
+              <th *ngFor="let jour of jours">{{ jour }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let heure of heures">
+              <td class="heure-label">{{ heure }}</td>
+              <ng-container *ngFor="let jour of jours">
+                <td
+                  *ngIf="!getCellule(jour, heure).hidden"
+                  class="slot-cell"
+                  [attr.rowspan]="getCellule(jour, heure).rowSpan"
+                >
+                  <div class="hour-line"></div>
+                  <ng-container *ngIf="getCellule(jour, heure).creneau as c">
+                    <div class="course-block">
+                      <strong>{{ c.matiere }}</strong>
+                      <div>{{ c.heureDebut }} - {{ c.heureFin }}</div>
+                      <div>{{ c.salle || '-' }}</div>
+                    </div>
+                  </ng-container>
+                </td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card>
+
+    <mat-card class="empty-card" *ngIf="creneaux.length === 0">
+      <p>Aucun créneau disponible pour le moment.</p>
+    </mat-card>
+  </main>
+</div>

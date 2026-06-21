@@ -1,0 +1,96 @@
+<app-navbar></app-navbar>
+
+<div class="admin-container">
+  <header class="page-header">
+    <h1>Gestion des emplois du temps</h1>
+    <p>L’administration définit les créneaux (jour, matière, heure).</p>
+  </header>
+
+  <mat-card class="form-card">
+    <h2>Ajouter un créneau</h2>
+
+    <div class="form-grid">
+      <label>
+        Jour
+        <select [(ngModel)]="form.jour">
+          <option *ngFor="let j of jours" [value]="j">{{ j }}</option>
+        </select>
+      </label>
+
+      <label>
+        Matière
+        <select [(ngModel)]="form.matiere">
+          <option *ngFor="let m of matieres" [value]="m">{{ m }}</option>
+        </select>
+      </label>
+
+      <label *ngIf="form.matiere === 'Autre'">
+        Préciser la matière
+        <input type="text" [(ngModel)]="form.autreMatiere" placeholder="Ex: Cryptographie" />
+      </label>
+
+      <label>
+        Heure début
+        <input type="time" [(ngModel)]="form.heureDebut" />
+      </label>
+
+      <label>
+        Heure fin
+        <input type="time" [(ngModel)]="form.heureFin" />
+      </label>
+
+      <label>
+        Salle (optionnel)
+        <input type="text" [(ngModel)]="form.salle" placeholder="Ex: C101" />
+      </label>
+    </div>
+
+    <button type="button" (click)="ajouter()">Ajouter</button>
+  </mat-card>
+
+  <mat-card class="list-card">
+    <h2>Liste des matières disponibles</h2>
+    <ul class="matieres-list">
+      <li *ngFor="let m of matieres" [hidden]="m === 'Autre'">{{ m }}</li>
+    </ul>
+  </mat-card>
+
+  <mat-card class="list-card">
+    <h2>Créneaux enregistrés</h2>
+
+    <ng-container *ngIf="creneaux.length > 0; else emptyState">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Jour</th>
+              <th>Matière</th>
+              <th>Début</th>
+              <th>Fin</th>
+              <th>Salle</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of creneaux">
+              <td>{{ c.jour }}</td>
+              <td>{{ c.matiere }}</td>
+              <td>{{ c.heureDebut }}</td>
+              <td>{{ c.heureFin }}</td>
+              <td>{{ c.salle || '-' }}</td>
+              <td>
+                <button type="button" class="btn-delete" (click)="supprimer(c.id)">
+                  Supprimer
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+  </mat-card>
+
+  <ng-template #emptyState>
+    <p>Aucun créneau pour le moment.</p>
+  </ng-template>
+</div>

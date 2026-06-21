@@ -15,6 +15,8 @@ import { MesNotes } from './pages/mes-notes/mes-notes';
 import { MonCompte } from './pages/mon-compte/mon-compte';
 import { Bulletins } from './pages/bulletins/bulletins';
 import { EspaceTd } from './pages/espace-td/espace-td';
+import { EmploiDuTemps } from './pages/emploi-du-temps/emploi-du-temps';
+import { GestionEmploisDuTemps } from './pages/gestion-emplois-du-temps/gestion-emplois-du-temps';
 
 import { authGuard } from './core/guards/auth-guard';
 import { AuthService } from './core/services/auth';
@@ -122,6 +124,18 @@ export const routes: Routes = [
   {
     path: 'espace-td',
     component: EspaceTd,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'emploi-du-temps',
+    component: EmploiDuTemps,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'gestion-emplois-du-temps',
+    component: GestionEmploisDuTemps,
     canActivate: [authGuard],
   },
 ];
